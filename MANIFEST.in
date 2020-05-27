@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include aerele_gst *.css
+recursive-include aerele_gst *.csv
+recursive-include aerele_gst *.html
+recursive-include aerele_gst *.ico
+recursive-include aerele_gst *.js
+recursive-include aerele_gst *.json
+recursive-include aerele_gst *.md
+recursive-include aerele_gst *.png
+recursive-include aerele_gst *.py
+recursive-include aerele_gst *.svg
+recursive-include aerele_gst *.txt
+recursive-exclude aerele_gst *.pyc
