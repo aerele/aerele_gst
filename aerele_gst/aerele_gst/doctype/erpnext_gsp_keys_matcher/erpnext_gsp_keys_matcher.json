@@ -1,0 +1,56 @@
+{
+ "creation": "2020-05-27 11:24:50.158533",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "erpnext_key",
+  "gsp_key",
+  "is_mandatory",
+  "is_parent",
+  "child_of"
+ ],
+ "fields": [
+  {
+   "fieldname": "erpnext_key",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "ERPNext Key"
+  },
+  {
+   "fieldname": "gsp_key",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "GSP Key"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_mandatory",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Is Mandatory"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_parent",
+   "fieldtype": "Check",
+   "label": "Is Parent"
+  },
+  {
+   "fieldname": "child_of",
+   "fieldtype": "Data",
+   "label": "Child Of"
+  }
+ ],
+ "istable": 1,
+ "modified": "2020-05-27 13:18:33.001780",
+ "modified_by": "Administrator",
+ "module": "Aerele Gst",
+ "name": "ERPNext GSP Keys Matcher",
+ "owner": "Administrator",
+ "permissions": [],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}
