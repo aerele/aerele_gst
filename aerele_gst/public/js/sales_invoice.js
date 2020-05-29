@@ -15,7 +15,8 @@ frappe.ui.form.on('Sales Invoice', {
 								{
 										label: 'Transporter',
 										fieldname: 'transporter',
-										fieldtype: 'Data'
+										fieldtype: 'Data',
+										depends_on: () => !frm.get_field('transporter').value
 								}
 						],
 						primary_action_label: 'Generate E-Way Bill',
