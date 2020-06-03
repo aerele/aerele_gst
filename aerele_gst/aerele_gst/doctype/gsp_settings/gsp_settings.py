@@ -55,6 +55,7 @@ def generate_eway_bill(dt, dn, additional_val):
 	response = request("POST", url, headers=headers, data=payload)
 	response_json = json.loads(response.text.encode('utf8'))
 	if response_json['success']:
+		dn = json.loads(dn)
 		sinv_doc = frappe.get_doc(dt, dn[0])
 		sinv_doc.ewaybill = response_json['result']['ewayBillNo']
 		sinv_doc.save()
