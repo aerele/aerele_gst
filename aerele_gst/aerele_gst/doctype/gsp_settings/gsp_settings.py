@@ -21,7 +21,7 @@ class GSPSettings(Document):
 def set_ewaybill_barcode(doc, action):
 	if action == "before_update_after_submit":
 		if doc.ewaybill:
-			code = barcode.Code128(doc.ewaybill)
+			code = barcode.Code128(str(doc.ewaybill))
 			barcode_svg = code.render(writer_options={'module_width': 0.4, 'module_height': 6, 'text_distance': 3, 'font_size':10}).decode()
 			doc.ewaybill_barcode = barcode_svg
 

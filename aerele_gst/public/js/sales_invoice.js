@@ -20,6 +20,7 @@ frappe.ui.form.on('Sales Invoice', {
 										if (r.message) {
 											console.log(r.message)
 										}
+										frm.refresh();
 									}
 								});
 						}
