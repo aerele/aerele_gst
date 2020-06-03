@@ -130,3 +130,11 @@ app_license = "MIT"
 doctype_js = {
 "Sales Invoice" : "public/js/sales_invoice.js",
 }
+
+doc_events = {
+	"Sales Invoice": {
+		"before_update_after_submit": "aerele_gst.aerele_gst.doctype.gsp_settings.gsp_settings.set_ewaybill_barcode"
+	}
+}
+
+after_install = "aerele_gst.aerele_gst.doctype.gsp_settings.gsp_settings.make_custom_field"

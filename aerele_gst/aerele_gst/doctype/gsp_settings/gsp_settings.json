@@ -8,6 +8,8 @@
   "endpoint",
   "api_key",
   "api_secret",
+  "username",
+  "password",
   "match_keys"
  ],
  "fields": [
@@ -36,10 +38,20 @@
    "fieldtype": "Table",
    "label": "Match Keys",
    "options": "ERPNext GSP Keys Matcher"
+  },
+  {
+   "fieldname": "username",
+   "fieldtype": "Data",
+   "label": "Username"
+  },
+  {
+   "fieldname": "password",
+   "fieldtype": "Data",
+   "label": "Password"
   }
  ],
  "issingle": 1,
- "modified": "2020-05-27 11:25:42.756535",
+ "modified": "2020-06-03 11:53:32.429284",
  "modified_by": "Administrator",
  "module": "Aerele Gst",
  "name": "GSP Settings",
