@@ -47,7 +47,7 @@ def generate_eway_bill(dt, dn, additional_val):
 	'Content-Type': 'application/json',
 	'username': doc.username,
 	'gstin': data['userGstin'],
-	'password': doc.username,
+	'password': doc.password,
 	'requestid': ''.join(random.choice(string.ascii_letters) for i in range(5)),
 	'Authorization': token
 	}
