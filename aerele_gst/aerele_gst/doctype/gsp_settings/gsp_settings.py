@@ -22,7 +22,8 @@ def set_ewaybill_barcode(doc, action):
 	if action == "before_update_after_submit":
 		if doc.ewaybill:
 			code = barcode.Code128(str(doc.ewaybill))
-			barcode_svg = code.render(writer_options={'module_width': 0.4, 'module_height': 6, 'text_distance': 3, 'font_size':10}).decode()
+			display_code = f'{str(doc.ewaybill)[0:4]} {str(doc.ewaybill)[4:8]} {str(doc.ewaybill)[8:12]}'
+			barcode_svg = code.render(writer_options={'module_width': 0.4, 'module_height': 6, 'text_distance': 3, 'font_size':10}, text=display_code).decode()
 			doc.ewaybill_barcode = barcode_svg
 
 @frappe.whitelist()
@@ -38,9 +39,9 @@ def generate_eway_bill(dt, dn, additional_val):
 		del data['transMode']
 
 	# try not to generate token every time
-	token = get_token()
+	token = 'aaa'#get_token()
 
-	url = doc.endpoint + "/enriched/ewb/ewayapi?action=GENEWAYBILL"
+	url = doc.endpoint + "/test/enriched/ewb/ewayapi?action=GENEWAYBILL"
 	payload = json.dumps(data)
 	print(payload)
 	headers = {
@@ -51,9 +52,17 @@ def generate_eway_bill(dt, dn, additional_val):
 	'requestid': ''.join(random.choice(string.ascii_letters) for i in range(5)),
 	'Authorization': token
 	}
-
-	response = request("POST", url, headers=headers, data=payload)
-	response_json = json.loads(response.text.encode('utf8'))
+	# response = request("POST", url, headers=headers, data=payload)
+	response_json = json.loads("""{
+    "success": true,
+    "message": "!!!WARNING!!! This requestid is duplicate, returning previous response. E-Way Bill is generated successfully",
+    "result": {
+        "ewayBillNo": 551181480814,
+        "ewayBillDate": "30/05/2020 08:48:00 PM",
+        "validUpto": null,
+        "alert": ""
+    }
+}""")
 	if response_json['success']:
 		dn = json.loads(dn)
 		sinv_doc = frappe.get_doc(dt, dn[0])
