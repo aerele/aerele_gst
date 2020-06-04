@@ -30,7 +30,6 @@ def set_ewaybill_barcode(doc, action):
 def generate_eway_bill(dt, dn, additional_val):
 	doc = frappe.get_single("GSP Settings")
 	ewb = generate_ewb_json(dt, dn)
-	# ewb = json.loads('{"version":"1.0.1118","billLists":[{"vehicleNo":"TN22PP2323","docNo":"INV20/21-02498","transporterId":"29AKLPM8755F1Z2","TotNonAdvolVal":0,"userGstin":"05AAACG2115R1ZN","fromGstin":"05AAACG2115R1ZN","supplyType":"O","subSupplyType":1,"docType":"INV","docDate":"23/05/2020","fromPincode":641604,"fromStateCode":33,"actualFromStateCode":33,"toGstin":"05AAACG2140A1ZL","toPincode":841239,"toStateCode":10,"transType":1,"actualToStateCode":10,"itemList":[{"hsnCode":61034200,"taxableAmount":131307,"qtyUnit":"","sgstRate":0,"cgstRate":0,"igstRate":5,"cessRate":0,"cessNonAdvol":0},{"hsnCode":61091000,"taxableAmount":40375,"qtyUnit":"","sgstRate":0,"cgstRate":0,"igstRate":5,"cessRate":0,"cessNonAdvol":0}],"totalValue":171682,"cgstValue":0,"sgstValue":0,"igstValue":8412.42,"cessValue":0,"OthValue":-3433.64,"totInvValue":176661,"transDistance":1234,"transMode":1,"vehicleType":"R","fromTrdName":"Essdee Knitting Mills Private Limited","toTrdName":"HANDLOOM STORE","transDocNo":"","fromAddr1":"4/1, first floor, 3rd street, Sivasakthi Nagar","fromAddr2":"K.T.C School Road,","fromPlace":"Tirupur","toAddr1":"MAIRWA MAIN ROAD,MAIRWA.","toAddr2":"","toPlace":"MAIRWA","transporterName":""}]}')
 	data = make_supporting_request_data(ewb['billLists'][0])
 	data.update(calculate_amounts(dt, dn))
 	if 'transDocNo' in data:
@@ -39,9 +38,9 @@ def generate_eway_bill(dt, dn, additional_val):
 		del data['transMode']
 
 	# try not to generate token every time
-	token = 'aaa'#get_token()
+	token = get_token()
 
-	url = doc.endpoint + "/test/enriched/ewb/ewayapi?action=GENEWAYBILL"
+	url = doc.endpoint + "/enriched/ewb/ewayapi?action=GENEWAYBILL"
 	payload = json.dumps(data)
 	print(payload)
 	headers = {
@@ -52,17 +51,8 @@ def generate_eway_bill(dt, dn, additional_val):
 	'requestid': ''.join(random.choice(string.ascii_letters) for i in range(5)),
 	'Authorization': token
 	}
-	# response = request("POST", url, headers=headers, data=payload)
-	response_json = json.loads("""{
-    "success": true,
-    "message": "!!!WARNING!!! This requestid is duplicate, returning previous response. E-Way Bill is generated successfully",
-    "result": {
-        "ewayBillNo": 551181480814,
-        "ewayBillDate": "30/05/2020 08:48:00 PM",
-        "validUpto": null,
-        "alert": ""
-    }
-}""")
+	response = request("POST", url, headers=headers, data=payload)
+	response_json = json.loads(response.text.encode('utf8'))
 	if response_json['success']:
 		dn = json.loads(dn)
 		sinv_doc = frappe.get_doc(dt, dn[0])
