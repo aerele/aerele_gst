@@ -13,6 +13,8 @@ from erpnext.regional.india.utils import get_gst_accounts, get_itemised_tax_brea
 from frappe import _
 import barcode
 from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
+from erpnext.regional.india.utils import validate_pincode
+from frappe.utils import now_datetime
 
 class GSPSettings(Document):
 	pass
@@ -167,3 +169,61 @@ def make_custom_field():
 		]
 	}
 	create_custom_fields(custom_fields, ignore_validate=frappe.flags.in_patch, update=True)
+
+def calculate_distance():
+	doc = frappe.get_single("GSP Settings")
+	dist_list = []
+	last_synced_on = doc.distance_last_synced_on
+	if not last_synced_on:
+		return
+	
+	sales_inv_list = frappe.db.get_all("Sales Invoice",  \
+		filters={"modified": [">=", last_synced_on]}, order_by="modified desc", \
+		fields=['name', 'distance', 'shipping_address_name', 'company_address'])
+
+	for sales_inv in sales_inv_list:
+		pincode_distance = {}
+		if not sales_inv["company_address"] or not sales_inv["shipping_address_name"]:
+			continue
+
+		if not sales_inv["distance"]:
+			continue
+
+		frompincode = frappe.db.get_value("Address", sales_inv["company_address"], "pincode") 
+		topincode = frappe.db.get_value("Address", sales_inv["shipping_address_name"], "pincode")
+
+		if not frompincode or not topincode:
+			continue
+
+		try:
+			frompincode = validate_pincode(frompincode, "Company Address")
+			topincode = validate_pincode(topincode, "Customer Address")
+		except:
+			continue
+		
+		pincode_distance["from_pincode"] = frompincode
+		pincode_distance["to_pincode"] = topincode
+		pincode_distance["distance_kms"] = sales_inv["distance"]
+
+		dist_list.append(pincode_distance)
+
+	save_pincode_distances = []
+
+	for new_distance in dist_list:
+		found = False
+		for saved_distance in doc.distance:
+			if new_distance["from_pincode"] == saved_distance.from_pincode and new_distance["to_pincode"] == saved_distance.to_pincode:
+				found = True
+
+		if not found:
+			save_pincode_distances.append(new_distance)
+
+	for save_pincode_distance in save_pincode_distances:
+		doc.distance.append(frappe.get_doc({
+			"doctype": "Pincode Distances",
+			"from_pincode": save_pincode_distance["from_pincode"],
+			"to_pincode": save_pincode_distance["to_pincode"],
+			"distance_kms": save_pincode_distance["distance_kms"]
+			}))
+	doc.distance_last_synced_on = now_datetime()
+	doc.save()

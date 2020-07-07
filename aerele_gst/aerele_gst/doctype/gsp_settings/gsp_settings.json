@@ -10,7 +10,11 @@
   "api_secret",
   "username",
   "password",
-  "match_keys"
+  "match_keys",
+  "helpers_section",
+  "additional_distance_percentage",
+  "distance",
+  "distance_last_synced_on"
  ],
  "fields": [
   {
@@ -48,10 +52,32 @@
    "fieldname": "password",
    "fieldtype": "Data",
    "label": "Password"
+  },
+  {
+   "default": "0.0",
+   "fieldname": "additional_distance_percentage",
+   "fieldtype": "Float",
+   "label": "Additional distance percentage"
+  },
+  {
+   "fieldname": "distance",
+   "fieldtype": "Table",
+   "label": "Distance",
+   "options": "Pincode Distances"
+  },
+  {
+   "fieldname": "helpers_section",
+   "fieldtype": "Section Break",
+   "label": "Helpers"
+  },
+  {
+   "fieldname": "distance_last_synced_on",
+   "fieldtype": "Datetime",
+   "label": "Distance Last Synced On"
   }
  ],
  "issingle": 1,
- "modified": "2020-06-03 11:53:32.429284",
+ "modified": "2020-07-07 14:03:03.655680",
  "modified_by": "Administrator",
  "module": "Aerele Gst",
  "name": "GSP Settings",
